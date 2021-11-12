@@ -8,6 +8,7 @@
     "start": "node server.js"
   },
   "dependencies": {
+    "@hapi/hapi": "^20.2.1",
     "express": "^4.17.1",
     "mongodb": "^4.1.4",
     "ronin-mocks": "^0.1.6",

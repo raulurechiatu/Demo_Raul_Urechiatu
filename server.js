@@ -1,19 +1,88 @@
-const http = require('http');
-const express = require('express');
-//const mongo = require('./mongo')
+'use strict';
 
-var app = express();
-const hostname = '0.0.0.0';
-const port = 8000;
+const MongoDAO = require('./db/mongo.js').MongoDAO;
+let mongoDAO = new MongoDAO();
+const Hapi = require('@hapi/hapi');
+const util = require('util');
 
-app.get('')
+const init = async () => {
 
-const server = http.createServer((req, res) => {
-  res.statusCode = 200;
-  res.setHeader('Content-Type', 'text/plain');
-  res.end('Hello World');
+    const server = Hapi.server({
+        port: 8000,
+        host: 'localhost'
+    });
+
+    server.route({
+        method: 'GET',
+        path: '/health',
+        handler: (request, h) => {
+            return 'Raul\'s Demo Application is running properly!';
+        }
+    });
+
+    server.route({
+        method: 'GET',
+        path: '/db/test',
+        handler: (request, h) => {
+            if (mongoDAO.isConnected) {
+                return "Connection successful";
+            } else {
+                return h.response('There is an issue with the DB').code(400);
+            }
+        }
+    });
+
+    server.route({
+        method: 'POST',
+        path: '/db/employees/insert',
+        handler: (request, h) => {
+            const employee = request.payload;
+            const addEmployee = util.promisify(mongoDAO.addEmployee);
+            return addEmployee(employee).then(response => {
+                console.log(response);
+                return response;
+            }).catch(err => {
+                return err;
+            });
+        }
+    });
+
+    server.route({
+        method: 'POST',
+        path: '/db/employees/insert/random',
+        handler: (request, h) => {
+            const employee = request.payload;
+            const addRandomEmployee = util.promisify(mongoDAO.addRandomEmployee);
+            return addRandomEmployee().then(response => {
+                console.log(response);
+                return response;
+            }).catch(err => {
+                return err;
+            });
+        }
+    });
+
+    server.route({
+        method: 'GET',
+        path: '/db/employees',
+        handler: (request, h) => {
+            const getEmployees = util.promisify(mongoDAO.getEmployees);
+            return getEmployees().then(employees => {
+                return employees;
+            }).catch(err => {
+                return err;
+            })
+        }
+    });
+
+    await server.start();
+    console.log('Server running on %s', server.info.uri);
+};
+
+process.on('unhandledRejection', (err) => {
+
+    console.log(err);
+    process.exit(1);
 });
 
-server.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
-});
+init();
