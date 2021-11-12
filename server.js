@@ -1,7 +1,12 @@
 const http = require('http');
+const express = require('express');
+//const mongo = require('./mongo')
 
-const hostname = '127.0.0.1';
-const port = 3000;
+var app = express();
+const hostname = '0.0.0.0';
+const port = 8000;
+
+app.get('')
 
 const server = http.createServer((req, res) => {
   res.statusCode = 200;
