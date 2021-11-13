@@ -2,7 +2,7 @@ let MongoClient = require('mongodb').MongoClient
 
 const dbName = 'demo-db'
 const table = 'employees'
-const url = `mongodb://localhost:27017`
+const url = `mongodb://0.0.0.0:27017`
 
 MongoDAO = function() {
 
@@ -12,13 +12,14 @@ MongoDAO = function() {
                 console.log(err);
                 return false;
             }
+            console.log("Connection Successful!");
             return true;
         })
     };
 
     this.addEmployee = (employee, callback) => {
         console.log('Inserting ', employee);
-        const client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true });
+        const client = new MongoClient(url);
         const db = client.db(dbName);
         const collection = db.collection(table);
         client.connect(err => {
@@ -41,7 +42,7 @@ MongoDAO = function() {
 
     this.addRandomEmployee = callback => {
         console.log('Inserting Random Employee');
-        const client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true });
+        const client = new MongoClient(url);
         const db = client.db(dbName);
         const collection = db.collection(table);
 
@@ -66,7 +67,7 @@ MongoDAO = function() {
 
     this.getEmployees = callback => {
         console.log('Retrieving all employees...');
-        const client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true });
+        const client = new MongoClient(url);
         const db = client.db(dbName);
         const collection = db.collection(table);
         client.connect(err => {
