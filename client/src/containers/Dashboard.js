@@ -66,10 +66,17 @@ function Dashboard(props) {
     navigate('/login');
   }
 
+  const handleDetails = () => {
+    navigate('/details');
+  }
+
   return (
     <div>
       <Button block size="lg" onClick={insertRandomRow}>
         Insert Random Employee
+      </Button>
+      <Button block size="lg" onClick={handleDetails}>
+        Check Aggregation Details
       </Button>
       <DataGrid
           rows={rows}

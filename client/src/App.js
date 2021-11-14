@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route, NavLink } from 'react-router-dom';
 import Login from './containers/Login';
 import Dashboard from './containers/Dashboard';
 import Home from './containers/Home';
+import Details from './containers/Details';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
               <Route exact path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/details" element={<Details />} />
             </Routes>
           </div>
         </div>
