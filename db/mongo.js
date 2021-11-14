@@ -67,26 +67,38 @@ MongoDAO = function() {
 
     this.getEmployees = callback => {
         console.log('Retrieving all employees...');
-        const client = new MongoClient(url);
-        const db = client.db(dbName);
-        const collection = db.collection(table);
-        client.connect(err => {
-            try {
-                collection.find({}).toArray((error, response) => {
-                    if (error) {
-                        console.log('The retrieval failed.', error);
-                        callback(error);
-                    } else {
-                        console.log('The retrieval was successful.');
-                        callback(response);
-                    }
-                });
-            } catch (e) {
-                console.log(e);
-                callback(e);
-            }
-        });
+        return getEmployeesData(callback);
     };
+
+    this.getTime = callback => {
+        console.log('Retrieving time of execution...');
+        const start = Date.now();
+        getEmployeesData(callback);
+        const end = Date.now();
+        callback(end - start);
+    };
+}
+
+function getEmployeesData(callback) {
+    const client = new MongoClient(url);
+    const db = client.db(dbName);
+    const collection = db.collection(table);
+    client.connect(err => {
+        try {
+            collection.find({}).toArray((error, response) => {
+                if (error) {
+                    console.log('The retrieval failed.', error);
+                    callback(error);
+                } else {
+                    console.log('The retrieval was successful.');
+                    callback(response);
+                }
+            });
+        } catch (e) {
+            console.log(e);
+            callback(e);
+        }
+    });
 }
 
 function generateRandomEmployee() {
